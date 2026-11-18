@@ -6,13 +6,17 @@ namespace translateAI
 {
     /// <summary>
     /// 划词翻译的悬浮窗：无边框、置顶、贴鼠标弹出，Esc 或点击别处即关闭。
+    /// 内容用只读 TextBox，可以选中、Ctrl+C 复制。
     /// </summary>
     internal sealed class PopupForm : Form
     {
-        private const int Pad = 12;
+        private const int Pad = 10;
         private const int MaxWidth = 520;
+        private const int MaxHeight = 420;
 
-        private readonly Label _text;
+        private readonly TextBox _text;
+        private readonly Font _font = new Font("Microsoft YaHei UI", 10.5F);
+
         private Timer _busyTimer;
         private Timer _autoCloseTimer;
         private string _busyPrefix = "翻译中";
@@ -29,13 +33,17 @@ namespace translateAI
             DoubleBuffered = true;
             KeyPreview = true;
 
-            _text = new Label();
-            _text.AutoSize = true;
-            _text.MaximumSize = new Size(MaxWidth - Pad * 2, 0);
-            _text.Font = new Font("Microsoft YaHei UI", 10.5F);
-            _text.ForeColor = Color.FromArgb(30, 30, 30);
+            _text = new TextBox();
+            _text.Multiline = true;
+            _text.ReadOnly = true;
+            _text.BorderStyle = BorderStyle.None;
+            _text.WordWrap = true;
+            _text.ScrollBars = ScrollBars.None;
+            _text.Font = _font;
             _text.BackColor = Color.White;
+            _text.ForeColor = Color.FromArgb(30, 30, 30);
             _text.Location = new Point(Pad, Pad);
+            _text.ShortcutsEnabled = true;
             Controls.Add(_text);
         }
 
@@ -103,10 +111,12 @@ namespace translateAI
             if (!_sizeLocked)
             {
                 // 用最长形态（三个点）定尺寸，动画过程中窗口不会一跳一跳
-                _text.MaximumSize = new Size(MaxWidth - Pad * 2, 0);
-                _text.Text = _busyPrefix + "...";
-                Size pref = _text.PreferredSize;
-                ClientSize = new Size(Math.Max(120, pref.Width + Pad * 2), pref.Height + Pad * 2);
+                Size measured = Measure(_busyPrefix + "...");
+
+                int w = Math.Max(120, Math.Min(MaxWidth, measured.Width + Pad * 2 + 8));
+                int h = Math.Max(40, measured.Height + Pad * 2 + 4);
+
+                ApplySize(w, h, false);
                 _sizeLocked = true;
             }
             _text.Text = text;
@@ -129,6 +139,7 @@ namespace translateAI
             Activate();
             BringToFront();
 
+            _text.Focus();
             ArmAutoClose();
         }
 
@@ -138,20 +149,49 @@ namespace translateAI
             if (!Visible) Show();
             Activate();
             BringToFront();
+            _text.Focus();
         }
 
         // ---------- 布局 ----------
 
+        internal bool HasScrollBar
+        {
+            get { return _text.ScrollBars != ScrollBars.None; }
+        }
+
+        internal bool TextIsSelectable
+        {
+            get { return _text.ReadOnly && _text.Multiline; }
+        }
+
         public void SetText(string text)
         {
-            _text.MaximumSize = new Size(MaxWidth - Pad * 2, 0);
-            _text.Text = text ?? "";
+            string t = text ?? "";
+            _text.Text = t;
 
-            Size pref = _text.PreferredSize;
-            int w = Math.Min(MaxWidth, pref.Width + Pad * 2);
-            int h = pref.Height + Pad * 2;
+            Size measured = Measure(t);
 
-            ClientSize = new Size(Math.Max(80, w), Math.Max(40, h));
+            int w = Math.Min(MaxWidth, measured.Width + Pad * 2 + 8);
+            int h = measured.Height + Pad * 2 + 4;
+
+            bool needScroll = h > MaxHeight;
+            if (needScroll) h = MaxHeight;
+
+            ApplySize(Math.Max(80, w), Math.Max(40, h), needScroll);
+        }
+
+        private Size Measure(string text)
+        {
+            Size max = new Size(MaxWidth - Pad * 2 - 8, int.MaxValue);
+            return TextRenderer.MeasureText(text, _font, max, TextFormatFlags.WordBreak);
+        }
+
+        private void ApplySize(int w, int h, bool scroll)
+        {
+            _text.ScrollBars = scroll ? ScrollBars.Vertical : ScrollBars.None;
+            _text.Width = Math.Max(40, w - Pad * 2);
+            _text.Height = Math.Max(20, h - Pad * 2);
+            ClientSize = new Size(w, h);
         }
 
         public void ShowAt(Point anchor)

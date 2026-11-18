@@ -65,6 +65,9 @@ namespace translateAI
         {
             InitializeComponent();
 
+            // 标题栏和任务栏用同一套图标（与托盘一致）
+            Icon = AppIcon;
+
             LoadConfig();
             I18n.Set(_cfg != null ? _cfg.Lang : "zh");
 
@@ -435,9 +438,49 @@ namespace translateAI
 
         // ---------- 托盘 ----------
 
-        private static Icon BuildTrayIcon()
+        private static Icon _iconSmall;
+        private static Icon _iconLarge;
+
+        /// <summary>
+        /// 从嵌入资源里按指定尺寸取帧。多尺寸 ico 里 16/32/48/64/128/256 都有，
+        /// 不指定尺寸时 Icon 会默认挑 32px，标题栏和任务栏就糊了。
+        /// </summary>
+        private static Icon LoadEmbeddedIcon(int size)
         {
-            using (Bitmap bmp = new Bitmap(32, 32))
+            try
+            {
+                using (Stream s = typeof(Form1).Assembly.GetManifestResourceStream("translateAI.ico"))
+                {
+                    if (s != null) return new Icon(s, size, size);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private static Icon AppIcon
+        {
+            get
+            {
+                if (_iconLarge == null) _iconLarge = LoadEmbeddedIcon(64) ?? BuildAppIcon(64);
+                return _iconLarge;
+            }
+        }
+
+        /// <summary>托盘用 16px 帧，交给系统缩放容易发虚。</summary>
+        private static Icon SmallIcon
+        {
+            get
+            {
+                if (_iconSmall == null) _iconSmall = LoadEmbeddedIcon(16) ?? BuildAppIcon(16);
+                return _iconSmall;
+            }
+        }
+
+        /// <summary>兜底图标：蓝色圆底 + 白字"译"。</summary>
+        private static Icon BuildAppIcon(int size)
+        {
+            using (Bitmap bmp = new Bitmap(size, size))
             {
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
@@ -445,15 +488,16 @@ namespace translateAI
                     g.Clear(Color.Transparent);
 
                     using (SolidBrush bg = new SolidBrush(Color.FromArgb(45, 137, 239)))
-                        g.FillEllipse(bg, 0, 0, 31, 31);
+                        g.FillEllipse(bg, 0, 0, size - 1, size - 1);
 
-                    using (Font f = new Font("Microsoft YaHei UI", 17F, FontStyle.Bold, GraphicsUnit.Pixel))
+                    using (Font f = new Font("Microsoft YaHei UI", size * 0.55f,
+                                             FontStyle.Bold, GraphicsUnit.Pixel))
                     using (SolidBrush fg = new SolidBrush(Color.White))
                     using (StringFormat sf = new StringFormat())
                     {
                         sf.Alignment = StringAlignment.Center;
                         sf.LineAlignment = StringAlignment.Center;
-                        g.DrawString("译", f, fg, new RectangleF(0, 1, 32, 32), sf);
+                        g.DrawString("译", f, fg, new RectangleF(0, 1, size, size), sf);
                     }
                 }
 
@@ -464,7 +508,7 @@ namespace translateAI
         private void SetupTray()
         {
             _notify = new NotifyIcon();
-            _notify.Icon = BuildTrayIcon();
+            _notify.Icon = SmallIcon;
             _notify.Text = "translateAI";
             _notify.Visible = true;
             _notify.DoubleClick += delegate { ShowMain(); };

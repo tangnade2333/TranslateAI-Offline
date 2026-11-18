@@ -50,6 +50,7 @@ namespace translateAI
             form.Shown += delegate
             {
                 WriteLog(logPath, "step    : 窗口已显示");
+                WriteLog(logPath, "icon    : " + (form.Icon != null) + "  size=" + form.Icon.Width + "x" + form.Icon.Height);
                 WriteLog(logPath, "hotkey  : registered = " + form.HotkeyRegistered);
                 clickTimer.Start();
                 verifyTimer.Start();

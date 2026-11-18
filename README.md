@@ -11,7 +11,7 @@ Select text  →  press Ctrl+P  →  popup appears next to the cursor
 ## 特性 / Features
 
 - **本地推理**：模型跑在 llama.cpp 上，断网可用，数据不出本机
-- **划词翻译**：全局热键取选中文字，悬浮窗显示译文，`Esc` 或点外面关闭
+- **划词翻译**：全局热键取选中文字，悬浮窗显示译文，`Esc` 或点外面关闭；译文可选中、可 `Ctrl+C` 复制
 - **主窗口**：长文本翻译、语言选择、反转、多行保留换行
 - **模型可换**：把任意 `.gguf` 丢进 `models\`，设置里切换即可
 - **热键可改**：设置里点一下直接按组合键
@@ -82,13 +82,18 @@ translateAI.exe --settings-check   # 设置面板能扫到模型、配置能往�
 ```
 translateAI\
 ├─ src\translateAI\      C# 项目（.NET Framework 4.8 / WinForms）
+│  └─ resources\         app.ico（多尺寸图标）
 ├─ docs\                 审计与规划文档
-├─ scripts\              build / package / start / verify
+├─ scripts\              build / package / start / verify / make-icon
 ├─ runtime\              运行时（CPU，需自行下载）
 ├─ runtime-vulkan\       运行时（Vulkan，需自行下载）
 ├─ models\               模型（需自行下载）
 └─ config.json
 ```
+
+图标由 `scripts\make-icon.ps1` 从源图生成方形多尺寸 `app.ico`（16/32/48/64/128/256），
+同时用于 exe 文件图标（`<ApplicationIcon>`）和运行时窗口/托盘图标（嵌入资源）。
+换图标时重跑一次该脚本即可。
 
 `runtime\`、`models\`、`*.gguf` 都不进版本库（见 `.gitignore`）。
 
