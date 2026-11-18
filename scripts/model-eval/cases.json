@@ -1,0 +1,18 @@
+[
+  {
+    "name": "en->zh short",
+    "prompt": "将以下文本翻译为中文，注意只需要输出翻译后的结果，不要额外解释：\n\nThe quick brown fox jumps over the lazy dog."
+  },
+  {
+    "name": "zh->en short",
+    "prompt": "将以下文本翻译为英文，注意只需要输出翻译后的结果，不要额外解释：\n\n这个功能在旧版本里是坏的，升级之后才恢复正常。"
+  },
+  {
+    "name": "zh->en medium",
+    "prompt": "将以下文本翻译为英文，注意只需要输出翻译后的结果，不要额外解释：\n\n由于上游接口在高峰期经常超时，我们把重试逻辑改成了指数退避，并加了一层本地缓存。"
+  },
+  {
+    "name": "en->zh numbers",
+    "prompt": "将以下文本翻译为中文，注意只需要输出翻译后的结果，不要额外解释：\n\nThe battery lasts 12.5 hours and charges to 80% in 45 minutes."
+  }
+]

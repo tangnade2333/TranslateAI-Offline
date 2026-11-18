@@ -1,0 +1,32 @@
+[
+  {
+    "name": "en->zh short",
+    "system": "[plamo-translate]\ntarget_lang=zh\n---",
+    "user": "The quick brown fox jumps over the lazy dog."
+  },
+  {
+    "name": "zh->en short",
+    "system": "[plamo-translate]\ntarget_lang=en\nsource_lang=zh\n---",
+    "user": "这个功能在旧版本里是坏的，升级之后才恢复正常。"
+  },
+  {
+    "name": "zh->en medium",
+    "system": "[plamo-translate]\ntarget_lang=en\nsource_lang=zh\n---",
+    "user": "由于上游接口在高峰期经常超时，我们把重试逻辑改成了指数退避，并加了一层本地缓存。"
+  },
+  {
+    "name": "en->zh numbers",
+    "system": "[plamo-translate]\ntarget_lang=zh\n---",
+    "user": "The battery lasts 12.5 hours and charges to 80% in 45 minutes."
+  },
+  {
+    "name": "en default(auto)",
+    "system": null,
+    "user": "The quick brown fox jumps over the lazy dog."
+  },
+  {
+    "name": "zh default(auto)",
+    "system": null,
+    "user": "这个功能在旧版本里是坏的，升级之后才恢复正常。"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "model": "",
+  "port": 8787,
+  "ctx": 4096,
+  "threads": 0,
+  "hotkey": "Ctrl+P",
+  "lang": "zh"
+}

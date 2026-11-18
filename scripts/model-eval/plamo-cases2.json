@@ -1,0 +1,17 @@
+[
+  {
+    "name": "en->zh long A",
+    "system": "[plamo-translate]\ntarget_lang=zh\n---",
+    "user": "The committee approved the proposal after a lengthy debate, but implementation will be delayed until next quarter."
+  },
+  {
+    "name": "en->zh long B",
+    "system": "[plamo-translate]\ntarget_lang=zh\n---",
+    "user": "Please make sure the device is fully charged before the first use, as the battery may have discharged during shipping."
+  },
+  {
+    "name": "zh->en long",
+    "system": "[plamo-translate]\ntarget_lang=en\nsource_lang=zh\n---",
+    "user": "如果服务器返回 503，请等待 30 秒后重试，并记录请求 ID 以便排查。"
+  }
+]

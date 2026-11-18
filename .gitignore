@@ -1,0 +1,25 @@
+# ---- build output ----
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# ---- packaged output ----
+dist/
+
+# ---- runtime binaries (download separately, ~160MB) ----
+runtime/
+runtime-vulkan/
+
+# ---- models (large weights) ----
+models/*.gguf
+
+# ---- local config & logs ----
+config.json
+*.log
+capture.log
+selftest.log
+traycheck.log
+popupcheck.log
+settingscheck.log
