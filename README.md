@@ -1,11 +1,35 @@
 # translateAI
 
+[![Release](https://img.shields.io/github/v/release/tangnade2333/TranslateAI-Offline?label=release)](https://github.com/tangnade2333/TranslateAI-Offline/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/tangnade2333/TranslateAI-Offline/total)](https://github.com/tangnade2333/TranslateAI-Offline/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows%20x64-blue)](#下载--download)
+[![Offline](https://img.shields.io/badge/inference-100%25%20local-success)](#特性--features)
+
 本地 AI 翻译工具：选中文字按热键，鼠标旁弹出译文。全部在本机推理，不联网。
 A local-first AI translator for Windows: select text, press the hotkey, get a popup translation — fully offline.
 
 ```
 选中文字  →  按 Ctrl+P  →  鼠标旁弹出译文
 Select text  →  press Ctrl+P  →  popup appears next to the cursor
+```
+
+## 下载 / Download
+
+到 **[Releases](https://github.com/tangnade2333/TranslateAI-Offline/releases/latest)** 页面下载，
+解压即用，**无需安装、无需 .NET 运行时**。
+
+| 包 | 大小 | 说明 |
+|---|---|---|
+| `translateAI-win64-v1.0.0.zip` | ~1.05 GB | ✅ **内置模型**，解压双击就能翻译（推荐） |
+| `translateAI-win64-v1.0.0-lite.zip` | ~36 MB | 不含模型，自己把 `.gguf` 放进 `models\` |
+
+要求：Windows 10 1903+ / Windows 11，x64，内存 8 GB+。显卡可选（有 Vulkan 支持的
+NVIDIA / AMD / Intel 会快 5–8 倍，没有就自动用 CPU）。
+
+下载后建议校验 SHA256（release 页面附 `.sha256` 文件）：
+
+```powershell
+Get-FileHash .\translateAI-win64-v1.0.0.zip -Algorithm SHA256
 ```
 
 ## 特性 / Features
@@ -55,7 +79,10 @@ src\translateAI\bin\Release\translateAI.exe
 powershell -ExecutionPolicy Bypass -File scripts\package.ps1 -Zip
 ```
 
-产出 `dist\translateAI-win64\`：exe + runtime + 空 models + 默认 config，约 110 MB（不含模型）。
+产出 `dist\translateAI-win64\`：exe + runtime + 空 models + 默认 config，约 90 MB（不含模型）。
+
+> 发布到 GitHub Releases 的完整流程（打 tag、上传 asset、校验文件）见
+> [docs/PUBLISHING.md](docs/PUBLISHING.md)。
 
 ## 自检 / Self-checks
 
